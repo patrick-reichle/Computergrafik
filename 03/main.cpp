@@ -1,35 +1,16 @@
 // Sample code for Übung 2
 
-#include "vec.h"
-#include "mat.h"
 #include <math.h>
+#include "mat.h"
+
+#include "cube.h"
+#include "bresenham.h"
+
 
 // might be you have to swith to
 // #include "glut.h" depending on your GLUT installation
-#include "glut.h"
 
-class Point {
-public:
 
-	Point (int x=0, int y=0) {
-		this->x = x;
-		this->y = y;
-	}
-
-	int x, y;
-};
-
-class Color {
-public:
-
-	Color (float r=1.0f, float g=1.0f, float b=1.0f) {
-		this->r = r;
-		this->g = g;
-		this->b = b;
-	}
-
-	float r, g, b;
-};
 ////////////////////////////////////////////////////////////
 //
 // system relevant global variables
@@ -106,75 +87,7 @@ void initGL ()
 }
 
 
-Point inv_trafo(Point p, bool mirror_x, bool mirror_y, bool mirror_xy) {
-    Point result = Point(p.x, p.y);
-    if (mirror_xy) {
-    	int t = result.x;
-    	result.x = result.y;
-    	result.y = t;
-    }
-    if (mirror_x) {
-    	result.x = -result.x;
-    }
-    if (mirror_y) {
-    	result.y = -result.y;
-    }
 
-    return result;
-}
-
-void bhamLine (Point p1, Point p2, Color c) 
-{
-    glBegin (GL_POINTS);
-    glColor3f (c.r, c.g, c.b);
-    Point start(0, 0);
-    Point end(p2.x - p1.x, p2.y - p1.y);
-    bool mirror_x = false;
-    bool mirror_y = false;
-    bool swap_xy = false;
-
-    if (end.x < 0) {
-    	end.x = -end.x;
-    	mirror_x = true;
-    }
-    if (end.y < 0) {
-    	end.y = -end.y;
-	mirror_y = true;
-    }
-
-    if (end.y > end.x) {
-    	int t = end.x;
-    	end.x = end.y;
-    	end.y = t;
-    	swap_xy = true;
-    }
-
-    int x = start.x;
-    int y = start.y;
-    int dx = end.x - x;
-    int dy = end.y - y;
-    int d = 2 * dy - dx;
-    int dNE = 2 * (dy - dx);
-    int dE = 2 * dy;
-
-    while (x < end.x) {
-    	if (d >= 0) {
-    	    d += dNE;
-	    x++;
-            y++;
-	}
-	else {
-	    d += dE;
-	    x++;
-	}
-	Point inv = inv_trafo(Point(x, y), mirror_x, mirror_y, swap_xy);
-	inv.x += p1.x;
-	inv.y += p1.y;
-	glVertex2i(inv.x, inv.y);
-    }
-	
-    glEnd ();
-}
 
 void drawLine(CVec4f a, CVec4f b, Color c) {
     bhamLine(Point(a(0),a(1)),Point(b(0),b(1)), c);
@@ -285,11 +198,12 @@ CVec4f projectZallg(CMat4f M, float fFocus, CVec4f p) {
 }
 
 void drawQuader(CVec4f p[8], float fFocus, Color c) {
+    CVec4f q[8];
     for (int i = 0; i < 8; i++) {
-        p[i] = projectZallg(getTransform(eye,viewDir,viewUp),fFocus, p[i]); 
+        q[i] = projectZallg(getTransform(eye,viewDir,viewUp),fFocus, p[i]); 
 
     }
-    drawProjectedZ(p, c);
+    drawProjectedZ(q, c);
 }
 
 // timer callback function
@@ -312,68 +226,6 @@ void display1 (void)
 
     glClear (GL_COLOR_BUFFER_BIT);
 
-    ///////
-    // display your data here ...
-    //
-    float point0Arr0[4] = {  5.0,  5.0,  0.0, 1.0 };
-    float point0Arr1[4] = { 20.0,  5.0,  0.0, 1.0 };
-    float point0Arr2[4] = {  5.0, 20.0,  0.0, 1.0 };
-    float point0Arr3[4] = { 20.0, 20.0,  0.0, 1.0 };
-    float point0Arr4[4] = {  5.0,  5.0, -7.0, 1.0 };
-    float point0Arr5[4] = { 20.0,  5.0, -7.0, 1.0 };
-    float point0Arr6[4] = {  5.0, 20.0, -7.0, 1.0 };
-    float point0Arr7[4] = { 20.0, 20.0, -7.0, 1.0 };
-
-    CVec4f points0[8] = {
-        CVec4f(point0Arr0),
-        CVec4f(point0Arr1),
-        CVec4f(point0Arr2),
-        CVec4f(point0Arr3),
-        CVec4f(point0Arr4),
-        CVec4f(point0Arr5),
-        CVec4f(point0Arr6),
-        CVec4f(point0Arr7)
-    };
-
-    float point1Arr0[4] = { -40.0, -40.0,  10.0, 1.0 };
-    float point1Arr1[4] = {  40.0, -40.0,  10.0, 1.0 };
-    float point1Arr2[4] = { -40.0,  40.0,  10.0, 1.0 };
-    float point1Arr3[4] = {  40.0,  40.0,  10.0, 1.0 };
-    float point1Arr4[4] = { -40.0, -40.0, -10.0, 1.0 };
-    float point1Arr5[4] = {  40.0, -40.0, -10.0, 1.0 };
-    float point1Arr6[4] = { -40.0,  40.0, -10.0, 1.0 };
-    float point1Arr7[4] = {  40.0,  40.0, -10.0, 1.0 };
-
-    CVec4f points1[8] = {
-        CVec4f(point1Arr0),
-        CVec4f(point1Arr1),
-        CVec4f(point1Arr2),
-        CVec4f(point1Arr3),
-        CVec4f(point1Arr4),
-        CVec4f(point1Arr5),
-        CVec4f(point1Arr6),
-        CVec4f(point1Arr7)
-    };
-
-    float point2Arr0[4] = { 50.0, -10.0,  0.0, 1.0 };
-    float point2Arr1[4] = { 80.0, -10.0,  0.0, 1.0 };
-    float point2Arr2[4] = { 50.0,  20.0,  0.0, 1.0 };
-    float point2Arr3[4] = { 80.0,  20.0,  0.0, 1.0 };
-    float point2Arr4[4] = { 50.0, -10.0, -5.0, 1.0 };
-    float point2Arr5[4] = { 80.0, -10.0, -5.0, 1.0 };
-    float point2Arr6[4] = { 50.0,  20.0, -5.0, 1.0 };
-    float point2Arr7[4] = { 80.0,  20.0, -5.0, 1.0 };
-
-    CVec4f points2[8] = {
-        CVec4f(point2Arr0),
-        CVec4f(point2Arr1),
-        CVec4f(point2Arr2),
-        CVec4f(point2Arr3),	
-        CVec4f(point2Arr4),
-        CVec4f(point2Arr5),
-        CVec4f(point2Arr6),
-        CVec4f(point2Arr7)
-    };
     drawQuader(points1, fFocus,red);
     //
     ///////
