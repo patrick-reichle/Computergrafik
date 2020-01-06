@@ -33,7 +33,6 @@ int g_iTimerMSecs;
 // some global state variables used to describe ...
 
 float fFocus;
-float rotationX, rotationY, rotationZ;
 
 CVec4f eye;
 
@@ -50,10 +49,7 @@ Color blue(0,0,1);
 // function to initialize our own variables
 void init () 
 {
-    fFocus = 50;
-    rotationX = 0; 
-    rotationY = 0;
-    rotationZ = 0;
+    fFocus = 45;
 
     float e[4] = {0,0,1,1};
     eye = CVec4f(e);
@@ -190,9 +186,6 @@ CMat4f getTransform(CVec4f viewOrigin, CVec4f viewDir, CVec4f viewUp) {
 }
 
 CVec4f projectZallg(CMat4f M, float fFocus, CVec4f p) {
-    //p = rotateX(p, rotationX);
-    //p = rotateY(p, rotationY);
-    //p = rotateZ(p, rotationZ);
     p = M*p;
     return projectZ(fFocus, p);
 }
@@ -209,12 +202,6 @@ void drawQuader(CVec4f p[8], float fFocus, Color c) {
 // timer callback function
 void timer (int value) 
 {
-    ///////
-    // update your variables here ...
-    //
-
-    ///////
-
     // the last two lines should always be
     glutPostRedisplay ();
     glutTimerFunc (g_iTimerMSecs, timer, 0);	// call timer for next iteration
@@ -225,8 +212,10 @@ void display1 (void)
 {
 
     glClear (GL_COLOR_BUFFER_BIT);
-
-    drawQuader(points1, fFocus,red);
+    drawQuader(points0, fFocus, Color(1,1,0));
+    //drawQuader(points1, fFocus,red);
+    drawQuader(points2, fFocus, blue);
+    drawQuader(q1, fFocus, green);
     //
     ///////
     // In double buffer mode the last
@@ -240,13 +229,6 @@ void display2 (void)
 {
     glClear (GL_COLOR_BUFFER_BIT);
 
-    ///////
-    // display your data here ...
-    //
-	
-    //
-    ///////
-
     // In double buffer mode the last
     // two lines should alsways be
     glFlush ();
@@ -255,6 +237,7 @@ void display2 (void)
 
 void keyboard (unsigned char key, int x, int y) 
 {
+    CVec4f axis;
     switch (key) {
 	case 'q':
 	case 'Q':
@@ -276,33 +259,33 @@ void keyboard (unsigned char key, int x, int y)
             break;
         case 'X':
             viewDir = rotateX(viewDir, 0.01);
-            viewUp = rotateX(viewUp, 0.01);
-            eye = rotateX(eye, 0.01);
+            viewUp  = rotateX(viewUp, 0.01);
+            eye     = rotateX(eye, 0.01);
             break;
         case 'Y':
             viewDir = rotateY(viewDir, 0.01);
-            viewUp = rotateY(viewUp, 0.01);
-            eye = rotateY(eye, 0.01);
+            viewUp  = rotateY(viewUp, 0.01);
+            eye     = rotateY(eye, 0.01);
             break;
         case 'Z':
             viewDir = rotateZ(viewDir, 0.01);
-            viewUp = rotateZ(viewUp, 0.01);
-            eye = rotateZ(eye, 0.01);
+            viewUp  = rotateZ(viewUp, 0.01);
+            eye     = rotateZ(eye, 0.01);
             break;
         case 'x':
             viewDir = rotateX(viewDir, -0.01);
-            viewUp = rotateX(viewUp, -0.01);
-            eye = rotateX(eye, -0.01);
+            viewUp  = rotateX(viewUp, -0.01);
+            eye     = rotateX(eye, -0.01);
             break;
         case 'y':
             viewDir = rotateY(viewDir, -0.01);
-            viewUp = rotateY(viewUp, -0.01);
-            eye = rotateY(eye, -0.01);
+            viewUp  = rotateY(viewUp, -0.01);
+            eye     = rotateY(eye, -0.01);
             break;
         case 'z':
             viewDir = rotateZ(viewDir, -0.01);
-            viewUp = rotateZ(viewUp, -0.01);
-            eye = rotateZ(eye, -0.01);
+            viewUp  = rotateZ(viewUp, -0.01);
+            eye     = rotateZ(eye, -0.01);
             break;
         case 'A':
             viewDir = rotate(viewDir, viewUp, 0.01);
@@ -311,12 +294,20 @@ void keyboard (unsigned char key, int x, int y)
             viewUp = rotate(viewUp, viewDir, 0.01);
             break;
         case 'C':
+            axis = norm(cross(viewDir, viewUp));
+            viewDir = rotate(viewDir, axis, 0.01);
+            viewUp  = rotate(viewUp, axis, 0.01);
             break;
         case 'a':
+            viewDir = rotate(viewDir, viewUp, -0.01);
             break;
         case 'b':
+            viewUp = rotate(viewUp, viewDir, -0.01);
             break;
         case 'c':
+            axis = norm(cross(viewDir, viewUp));
+            viewDir = rotate(viewDir, axis, -0.01);
+            viewUp  = rotate(viewUp, axis, -0.01);
             break;
         case 'U':
             eye(0)+=5;

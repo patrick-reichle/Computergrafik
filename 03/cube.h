@@ -58,4 +58,24 @@ CVec4f points2[8] = {
     CVec4f(point2Arr5),
     CVec4f(point2Arr6),
     CVec4f(point2Arr7)
- };
+};
+
+float p0[4] = {  0.0,  0.0,  0.0, 1.0};
+float p1[4] = { 30.0,  0.0,  0.0, 1.0};
+float p2[4] = {  0.0, 20.0,  0.0, 1.0};
+float p3[4] = { 30.0, 20.0,  0.0, 1.0};
+float p4[4] = {  0.0,  0.0, -5.0, 1.0};
+float p5[4] = { 30.0,  0.0, -5.0, 1.0};
+float p6[4] = {  0.0, 20.0, -5.0, 1.0};
+float p7[4] = { 30.0, 20.0, -5.0, 1.0};
+
+CVec4f q1[8] = {
+    CVec4f(p0),
+	CVec4f(p1),
+	CVec4f(p2),
+	CVec4f(p3),
+	CVec4f(p4),
+	CVec4f(p5),
+	CVec4f(p6),
+	CVec4f(p7)
+};
