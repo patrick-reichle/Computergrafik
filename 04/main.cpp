@@ -3,7 +3,7 @@
 using namespace std;
 
 // Include-File für die GLUT-Library
-#include <gl/glut.h>
+#include "glut.h"
 
 #include "vec.h"
 
@@ -211,9 +211,26 @@ void setQuad(Point p, Color c) {
 //
 
 CVec3f intersect (CVec3f EyePos, CVec3f ViewDir) {
-	CVec3f hit;
-
-	return hit;
+    CVec3f hit;
+    EyePos(2) -= M;
+    float a = ViewDir.dot(ViewDir);
+    float b = ViewDir.dot(EyePos) * 2;
+    float c = EyePos.dot(EyePos) - (R*R);
+    float d = b*b - 4*a*c;
+    if (d < 0) {
+        hit(2) = -1;
+    } else {
+        float t;
+        if (d == 0) {
+            t = -b / 2*a; 
+        } else {
+            float t1 = (-b + sqrt(d)) / 2*a;
+            float t2 = (-b - sqrt(d)) / 2*a;
+            t = min(t1,t2);
+        }
+        hit = EyePos + ViewDir*t;
+    }
+    return hit;
 }
 
 Color phong(CVec3f HitPos, CVec3f ViewDir) {
@@ -323,7 +340,8 @@ void rayCast() {
 			
 			Color c = Color(1,1,1); // Hintergrund weiß
 			if (hit(2) != -1) {
-				c= phong(hit,v);
+				//c= phong(hit,v);
+				c = Color(1,0,0);
 			}
 			
 			setPoint(Point(x,y),c);
