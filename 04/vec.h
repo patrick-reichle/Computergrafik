@@ -66,7 +66,7 @@ public:
 
 	CVector<T, SIZE> &operator = (const T atData[SIZE]) {
 		for (int i=0; i<SIZE; i++) // not me, so L-Value action: copy data
-			m_atData[i] = vec.m_atData[i];
+			m_atData[i] = atData[i];
 
 		return (*this); // also an R-value in e.g.
 						// vec1  = vec2  +   (vec2=atData); // parenthesis () needed to evaluate expression vec2=atData
