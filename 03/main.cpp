@@ -49,9 +49,9 @@ Color blue(0,0,1);
 // function to initialize our own variables
 void init () 
 {
-    fFocus = 45;
+    fFocus = 50;
 
-    float e[4] = {0,0,1,1};
+    float e[4] = {0,0,0,1};
     eye = CVec4f(e);
 
     float vd[4] = {0,0,-1,0};
@@ -116,38 +116,47 @@ CVec4f cross(CVec4f a, CVec4f b) {
 
 CVec4f norm(CVec4f vec) {
     float len = sqrt(pow(vec(0), 2) + pow(vec(1), 2) + pow(vec(2), 2));
-    vec(0) = vec(0) / len;
-    vec(1) = vec(1) / len;
-    vec(2) = vec(2) / len;
-    return vec;
+    return vec * (1 / len);
 }
 CVec4f rotateX(CVec4f p, float alpha) {
-    float r[4][4] = {{1,0,0,0},{0,cos(alpha),-sin(alpha),0},{0,sin(alpha),cos(alpha),0},{0,0,0,1}};
+    float r[4][4] = { {1, 0, 0, 0}, {0, cos(alpha), -sin(alpha), 0}, {0, sin(alpha),  cos(alpha), 0}, {0, 0, 0, 1} };
     return CMat4f(r) * p;
 }
 
 CVec4f rotateY(CVec4f p, float alpha) {
-    float r[4][4] = { { cos(alpha), 0, sin(alpha), 0 },{ 0, 1, 0, 0 },{ -sin(alpha), 0, cos(alpha), 0 } ,{ 0, 0, 0, 1 } };
+    float r[4][4] = { {cos(alpha), 0, sin(alpha), 0}, {0, 1, 0, 0}, {-sin(alpha), 0, cos(alpha), 0}, {0, 0, 0, 1} };
     return CMat4f(r) * p;
 }
 
 CVec4f rotateZ(CVec4f p, float alpha) {
-    float r[4][4] = { { cos(alpha), -sin(alpha), 0, 0 },{ sin(alpha), cos(alpha), 0, 0 },{ 0, 0, 1, 0 },{ 0, 0, 0, 1 } };
+    float r[4][4] = { {cos(alpha), -sin(alpha), 0, 0}, {sin(alpha), cos(alpha), 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1} };
     return CMat4f(r) * p;
 }
 
 //rotate a around axis b
 CVec4f rotate(CVec4f a, CVec4f b, float psi) {
+    b = norm(b);
     float c = cos(psi);
     float c1 = 1 -c;
     float s = sin(psi);
-    float m[4][4] = {{b(0)*b(0)*c1 + c, b(0)*b(1)*c1 - b(2)*s, b(0)*b(2)*c1 + b(1)*s,0},
-                     {b(0)*b(1)*c1+b(2)*s, b(1)*b(1)*c1 + c, b(1)*b(2)*c1-b(0)-b(0)*s,0},
-                     {b(0)*b(2)*c1-b(1)*s, b(1)*b(2)*c1 + b(0)*s, b(2)*b(2)*c1+c,0},
+
+    float t1[4][4] = { {1, 0, 0, -a(0)},
+                       {0, 1, 0, -a(1)},
+                       {0, 0, 1, -a(2)},
+                       {0, 0, 0,     1} };
+
+    float t2[4][4] = { {1, 0, 0, a(0)},
+                       {0, 1, 0, a(1)},
+                       {0, 0, 1, a(2)},
+                       {0, 0, 0,    1} };
+                      
+    float m[4][4] = {{b(0)*b(0)*c1 + c,      b(0)*b(1)*c1 - b(2)*s, b(0)*b(2)*c1 + b(1)*s, 0},
+                     {b(0)*b(1)*c1 + b(2)*s, b(1)*b(1)*c1 + c     , b(1)*b(2)*c1 - b(0)*s, 0},
+                     {b(0)*b(2)*c1 - b(1)*s, b(1)*b(2)*c1 + b(0)*s, b(2)*b(2)*c1 + c,      0},
                      {0,0,0,1}};
-    a = a - eye;
-    a = CMat4f(m) * a;
-    a = a + eye;
+    
+    
+    a = CMat4f(t2) * CMat4f(m) * CMat4f(t1) * a;
     return a;
 }
 
@@ -166,9 +175,6 @@ CMat4f getTransform(CVec4f viewOrigin, CVec4f viewDir, CVec4f viewUp) {
     viewUp = norm(viewUp);
     viewDir = norm(viewDir);
     
-    float v[4] = {viewDir(1) * viewUp(2) - viewDir(2) * viewUp(1),
-                  viewDir(2) * viewUp(0) - viewDir(0) * viewUp(2),
-                  viewDir(0) * viewUp(1) - viewDir(1) * viewUp(0),1};
     CVec4f x = cross(viewDir, viewUp);
     float t[4][4] = {{1,0,0,-viewOrigin(0)},
                      {0,1,0,-viewOrigin(1)},
@@ -212,10 +218,10 @@ void display1 (void)
 {
 
     glClear (GL_COLOR_BUFFER_BIT);
-    drawQuader(points0, fFocus, Color(1,1,0));
-    //drawQuader(points1, fFocus,red);
+    drawQuader(points0, fFocus, green);
+    //drawQuader(points1, fFocus, red);
     drawQuader(points2, fFocus, blue);
-    drawQuader(q1, fFocus, green);
+    //drawQuader(q1, fFocus, red);
     //
     ///////
     // In double buffer mode the last
@@ -258,56 +264,56 @@ void keyboard (unsigned char key, int x, int y)
             fFocus++;
             break;
         case 'X':
-            viewDir = rotateX(viewDir, 0.01);
-            viewUp  = rotateX(viewUp, 0.01);
-            eye     = rotateX(eye, 0.01);
+            viewDir = rotateX(viewDir, 0.1);
+            viewUp  = rotateX(viewUp, 0.1);
+            eye     = rotateX(eye, 0.1);
             break;
         case 'Y':
-            viewDir = rotateY(viewDir, 0.01);
-            viewUp  = rotateY(viewUp, 0.01);
-            eye     = rotateY(eye, 0.01);
+            viewDir = rotateY(viewDir, 0.1);
+            viewUp  = rotateY(viewUp, 0.1);
+            eye     = rotateY(eye, 0.1);
             break;
         case 'Z':
-            viewDir = rotateZ(viewDir, 0.01);
-            viewUp  = rotateZ(viewUp, 0.01);
-            eye     = rotateZ(eye, 0.01);
+            viewDir = rotateZ(viewDir, 0.1);
+            viewUp  = rotateZ(viewUp, 0.1);
+            eye     = rotateZ(eye, 0.1);
             break;
         case 'x':
-            viewDir = rotateX(viewDir, -0.01);
-            viewUp  = rotateX(viewUp, -0.01);
-            eye     = rotateX(eye, -0.01);
+            viewDir = rotateX(viewDir, -0.1);
+            viewUp  = rotateX(viewUp, -0.1);
+            eye     = rotateX(eye, -0.1);
             break;
         case 'y':
-            viewDir = rotateY(viewDir, -0.01);
-            viewUp  = rotateY(viewUp, -0.01);
-            eye     = rotateY(eye, -0.01);
+            viewDir = rotateY(viewDir, -0.1);
+            viewUp  = rotateY(viewUp, -0.1);
+            eye     = rotateY(eye, -0.1);
             break;
         case 'z':
-            viewDir = rotateZ(viewDir, -0.01);
-            viewUp  = rotateZ(viewUp, -0.01);
-            eye     = rotateZ(eye, -0.01);
+            viewDir = rotateZ(viewDir, -0.1);
+            viewUp  = rotateZ(viewUp, -0.1);
+            eye     = rotateZ(eye, -0.1);
             break;
         case 'A':
-            viewDir = rotate(viewDir, viewUp, 0.01);
+            viewDir = rotate(viewDir, viewUp, 0.1);
             break;
         case 'B':
-            viewUp = rotate(viewUp, viewDir, 0.01);
+            viewUp = rotate(viewUp, viewDir, 0.1);
             break;
         case 'C':
             axis = norm(cross(viewDir, viewUp));
-            viewDir = rotate(viewDir, axis, 0.01);
-            viewUp  = rotate(viewUp, axis, 0.01);
+            viewDir = rotate(viewDir, axis, 10*M_PI / 180);
+            viewUp  = rotate(viewUp, axis, 10*M_PI / 180);
             break;
         case 'a':
-            viewDir = rotate(viewDir, viewUp, -0.01);
+            viewDir = rotate(viewDir, viewUp, -0.1);
             break;
         case 'b':
-            viewUp = rotate(viewUp, viewDir, -0.01);
+            viewUp = rotate(viewUp, viewDir, -0.1);
             break;
         case 'c':
             axis = norm(cross(viewDir, viewUp));
-            viewDir = rotate(viewDir, axis, -0.01);
-            viewUp  = rotate(viewUp, axis, -0.01);
+            viewDir = rotate(viewDir, axis, -0.1);
+            viewUp  = rotate(viewUp, axis, -0.1);
             break;
         case 'U':
             eye(0)+=5;
