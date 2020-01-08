@@ -294,10 +294,10 @@ void keyboard (unsigned char key, int x, int y)
             eye     = rotateZ(eye, -0.1);
             break;
         case 'A':
-            viewDir = rotate(viewDir, viewUp, 0.1);
+            viewUp = rotate(viewUp, viewDir, 0.1);
             break;
         case 'B':
-            viewUp = rotate(viewUp, viewDir, 0.1);
+            viewDir = rotate(viewDir, viewUp, 0.1);
             break;
         case 'C':
             axis = norm(cross(viewDir, viewUp));
@@ -305,10 +305,10 @@ void keyboard (unsigned char key, int x, int y)
             viewUp  = rotate(viewUp, axis, 10*M_PI / 180);
             break;
         case 'a':
-            viewDir = rotate(viewDir, viewUp, -0.1);
+            viewUp = rotate(viewUp, viewDir, -0.1);
             break;
         case 'b':
-            viewUp = rotate(viewUp, viewDir, -0.1);
+            viewDir = rotate(viewDir, viewUp, -0.1);
             break;
         case 'c':
             axis = norm(cross(viewDir, viewUp));
