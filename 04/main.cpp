@@ -78,29 +78,29 @@ int A= -1;
 class Point {
 public:
 
-	Point (int x=0, int y=0) {
-		this->x = x;
-		this->y = y;
-	}
+    Point (int x=0, int y=0) {
+	this->x = x;
+        this->y = y;
+    }
 
-	int x, y;
+    int x, y;
 };
 
 // Eine ¸beraus primitive Farbklasse
 class Color {
 public:
 
-	Color (float r=1.0f, float g=1.0f, float b=1.0f) {
-		this->r = r;
-		this->g = g;
-		this->b = b;
-	}
+    Color (float r=1.0f, float g=1.0f, float b=1.0f) {
+	this->r = r;
+	this->g = g;
+	this->b = b;
+    }
 
-	float r, g, b;
+    float r, g, b;
 
-	void print(char * name = "c") {
-		cout << name << " = (" << r << ", " << g << ", " << b << ")" << endl;
-	}
+    void print(char * name = "c") {
+	cout << name << " = (" << r << ", " << g << ", " << b << ")" << endl;
+    }
 };
 
 //
@@ -113,45 +113,45 @@ public:
 // sie momentan nur ein notwendiges ‹bel darstellt!
 void manageTexture () {
 
-	glEnable (GL_TEXTURE_2D);
+    glEnable (GL_TEXTURE_2D);
 
-	if (g_TexID==0)
-		glGenTextures (1, &g_TexID);
+    if (g_TexID==0)
+    glGenTextures (1, &g_TexID);
 
-	glBindTexture (GL_TEXTURE_2D, g_TexID);
+    glBindTexture (GL_TEXTURE_2D, g_TexID);
 
-	glTexEnvf (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-	glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexEnvf (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-	glTexImage2D (GL_TEXTURE_2D, 0, GL_RGB, TEX_RES_X, TEX_RES_Y, 0, GL_RGB, GL_UNSIGNED_BYTE, g_Buffer);
+    glTexImage2D (GL_TEXTURE_2D, 0, GL_RGB, TEX_RES_X, TEX_RES_Y, 0, GL_RGB, GL_UNSIGNED_BYTE, g_Buffer);
 	
-	glBindTexture (GL_TEXTURE_2D, 0);
+    glBindTexture (GL_TEXTURE_2D, 0);
 
-	glDisable (GL_TEXTURE_2D);
+    glDisable (GL_TEXTURE_2D);
 }
 
 void mapTexture() {
-	glBindTexture (GL_TEXTURE_2D, g_TexID);
-	
-	glEnable (GL_TEXTURE_2D);
-	glBegin (GL_QUADS);
-		glColor3f (1, 0, 0);
-		glTexCoord2f (0, 0);
-		glVertex2f (-g_WinWidth/2, -g_WinHeight/2);
-		glTexCoord2f (1, 0);
-		glVertex2f (g_WinWidth/2, -g_WinHeight/2);
-		glTexCoord2f (1, 1);
-		glVertex2f (g_WinWidth/2, g_WinHeight/2);
-		glTexCoord2f (0, 1);
-		glVertex2f (-g_WinWidth/2, g_WinHeight/2);
-	glEnd ();
 
-	glBindTexture (GL_TEXTURE_2D, 0);
-	glDisable (GL_TEXTURE_2D);
+    glBindTexture (GL_TEXTURE_2D, g_TexID);
+    glEnable (GL_TEXTURE_2D);
+    glBegin (GL_QUADS);
+    glColor3f (1, 0, 0);
+    glTexCoord2f (0, 0);
+    glVertex2f (-g_WinWidth/2, -g_WinHeight/2);
+    glTexCoord2f (1, 0);
+    glVertex2f (g_WinWidth/2, -g_WinHeight/2);
+    glTexCoord2f (1, 1);
+    glVertex2f (g_WinWidth/2, g_WinHeight/2);
+    glTexCoord2f (0, 1);
+    glVertex2f (-g_WinWidth/2, g_WinHeight/2);
+    glEnd ();
+
+    glBindTexture (GL_TEXTURE_2D, 0);
+    glDisable (GL_TEXTURE_2D);
 }
 
 // Callback Funktion um die Fenstergrˆﬂen anzupassen.
@@ -159,16 +159,16 @@ void mapTexture() {
 // Sie sich im Moment nicht weiter darum.
 void reshape(int w, int h) {
 
-	g_WinWidth = w;
-	g_WinHeight = h;
+    g_WinWidth = w;
+    g_WinHeight = h;
 
-	glViewport(0, 0, w, h);					// Establish viewing area to cover entire window.
+    glViewport(0, 0, w, h);					// Establish viewing area to cover entire window.
 
-	glMatrixMode(GL_PROJECTION);			// Start modifying the projection matrix.
-	glLoadIdentity();						// Reset project matrix.
-	glOrtho(-w/2, w/2, -h/2, h/2, 0, 1);	// Map abstract coords directly to window coords.
+    glMatrixMode(GL_PROJECTION);			// Start modifying the projection matrix.
+    glLoadIdentity();						// Reset project matrix.
+    glOrtho(-w/2, w/2, -h/2, h/2, 0, 1);	// Map abstract coords directly to window coords.
 
-	glutPostRedisplay ();
+    glutPostRedisplay ();
 }
 
 // Funktion lˆscht den Bildschirm mit der angegebenen Farbe
@@ -176,11 +176,11 @@ void reshape(int w, int h) {
 // lˆscht den Bildschirm in Weiﬂ.
 // Ohne Farbangabe ist der Standard Weiﬂ
 void clearTexture (Color c=Color()) {
-	for (int i=0; i<TEX_RES; i++) {
-		g_Buffer[3*i  ] = 255.0*c.r;
-		g_Buffer[3*i+1] = 255.0*c.g;
-		g_Buffer[3*i+2] = 255.0*c.b;
-	}
+    for (int i=0; i<TEX_RES; i++) {
+    	g_Buffer[3*i  ] = 255.0*c.r;
+	g_Buffer[3*i+1] = 255.0*c.g;
+	g_Buffer[3*i+2] = 255.0*c.b;
+    }
 }
 
 // Funktion malt einen Punkt an die angegebenen Koordinaten
@@ -190,25 +190,144 @@ void clearTexture (Color c=Color()) {
 //
 // Nutzen Sie diese Funktion ...
 void setPoint (Point p, Color c= Color(0,0,0)) {
-	if (p.x < 0 || p.y < 0 || p.x > TEX_RES_X -1 || p.y > TEX_RES_Y -1) {
-		cerr << "Illegal point co-ordinates (" << p.x << ", " << p.y << ")\n" << flush;
-		return;
-	}
+    if (p.x < 0 || p.y < 0 || p.x > TEX_RES_X -1 || p.y > TEX_RES_Y -1) {
+	cerr << "Illegal point co-ordinates (" << p.x << ", " << p.y << ")\n" << flush;
+	return;
+    }
 	
-	g_Buffer[3*TO_LINEAR (p.x, p.y)  ] = 255.0*c.r;
-	g_Buffer[3*TO_LINEAR (p.x, p.y)+1] = 255.0*c.g;
-	g_Buffer[3*TO_LINEAR (p.x, p.y)+2] = 255.0*c.b;
+    g_Buffer[3*TO_LINEAR (p.x, p.y)  ] = 255.0*c.r;
+    g_Buffer[3*TO_LINEAR (p.x, p.y)+1] = 255.0*c.g;
+    g_Buffer[3*TO_LINEAR (p.x, p.y)+2] = 255.0*c.b;
 }
 
 void setQuad(Point p, Color c) {
-	for (int x= p.x; x < p.x+10; x++)
-		for (int y= p.y; y < p.y+10; y++)
-			setPoint(Point(x,y),c);
+    for (int x= p.x; x < p.x+10; x++)
+	for (int y= p.y; y < p.y+10; y++)
+	    setPoint(Point(x,y),c);
 }
 
 //
 /////////////////////////////////////////////////////////////////////////////////////////
 //
+
+
+
+Color phong(CVec3f HitPos, CVec3f ViewDir) {
+	
+// Phong-Parameter
+	
+    //Reflexionskoeffizienten fuer die Kugelfarben
+    CVec3f Ka;		// ambient
+    Ka(0)= rK;
+    Ka(1)= gK;
+    Ka(2)= bK;
+
+    CVec3f Kd;		// diffuse
+    Kd(0)= rK;
+    Kd(1)= gK;
+    Kd(2)= bK;
+
+    CVec3f Ks;		// specular
+    Ks(0)= 0.5;
+    Ks(1)= 0.5;
+    Ks(2)= 0.5;
+
+    int exp= 28;	       // shininess
+
+    //andere Reflexionskoeffizienten
+    //////////////////
+/*  // Messing
+    CVec3f Ka;
+    Ka(0)= 0.33;
+    Ka(1)= 0.22;
+    Ka(2)= 0.03;
+
+    CVec3f Kd;
+    Kd(0)= 0.78;
+    Kd(0)= 0.57;
+    Kd(0)= 0.11;
+
+    CVec3f Ks;
+    Ks(0)= 0.99;
+    Ks(1)= 0.94;
+    Ks(2)= 0.81;
+
+    int exp= 28;
+*/
+/*  //////////////////  
+    // Bronze
+    CVec3f Ka;
+    Ka(0)= 0.21;
+    Ka(1)= 0.13;
+    Ka(2)= 0.05;
+
+    CVec3f Kd;
+    Kd(0)= 0.71;
+    Kd(0)= 0.43;
+    Kd(0)= 0.18;
+
+    CVec3f Ks;
+    Ks(0)= 0.39;
+    Ks(1)= 0.27;
+    Ks(2)= 0.17;
+	
+    int exp= 26;
+    //////////////////
+*/
+
+    // Beleuchtungsstaerken
+    ///////////////////////
+    CVec3f Ia;		// ambient
+    Ia(0)= 0.1;
+    Ia(1)= 0.1;
+    Ia(2)= 0.1;
+	
+    CVec3f Id;		// diffuse
+    Id(0)= 1.0;
+    Id(1)= 1.0;
+    Id(2)= 1.0;
+	
+    CVec3f Is;		// specular
+    Is(0)= 1.0;
+    Is(1)= 1.0;
+    Is(2)= 1.0;
+	///////////////////////
+    CVec3f LightPos;
+    LightPos(0) = xL;
+    LightPos(1) = yL;
+    LightPos(2) = zL;
+    CVec3f LightDir = LightPos - HitPos;
+    CVec3f N;
+    N(0) = HitPos(0);
+    N(1) = HitPos(1);
+    N(2) = HitPos(2) - M;
+    N = N.norm();
+    LightDir = LightDir.norm();
+    ViewDir = ViewDir.norm();
+
+    CVec3f R = N * (2*N.dot(LightDir)) - LightDir;
+    CVec3f H = LightDir + ViewDir * ((LightDir+ViewDir).length());
+    H = H.norm();
+    R = R.norm();
+    float d = max(0, LightDir.dot(N));
+    
+    double s = max(0,powf(H.dot(ViewDir),exp));
+    float r,g,b;
+    
+    r = Kd(0)*d + Ks(0)*s + Ka(0)*Ia(0);
+    g = Kd(1)*d + Ks(1)*s + Ka(1)*Ia(1);
+    b = Kd(2)*d + Ks(2)*s + Ka(2)*Ia(2);
+    r = min(r, 1);
+    g = min(g,1);
+    b = min(b,1);
+    Color c(r,g,b);
+    if (r > 1.0 || g > 1.0 || b > 1.0) {
+        cout << d << s <<  endl;
+        c.print();
+    }
+
+    return c;
+}
 
 CVec3f intersect (CVec3f EyePos, CVec3f ViewDir) {
     CVec3f hit;
@@ -232,122 +351,33 @@ CVec3f intersect (CVec3f EyePos, CVec3f ViewDir) {
     }
     return hit;
 }
-
-Color phong(CVec3f HitPos, CVec3f ViewDir) {
-	
-// Phong-Parameter
-	
-	//Reflexionskoeffizienten fuer die Kugelfarben
-	CVec3f Ka;		// ambient
-	Ka(0)= rK;
-	Ka(1)= gK;
-	Ka(2)= bK;
-
-	CVec3f Kd;		// diffuse
-	Kd(0)= rK;
-	Kd(1)= gK;
-	Kd(2)= bK;
-
-	CVec3f Ks;		// specular
-	Ks(0)= 0.5;
-	Ks(1)= 0.5;
-	Ks(2)= 0.5;
-
-	int exp= 28;	       // shininess
-
-	//andere Reflexionskoeffizienten
-	//////////////////
-/*	// Messing
-	CVec3f Ka;
-	Ka(0)= 0.33;
-	Ka(1)= 0.22;
-	Ka(2)= 0.03;
-
-	CVec3f Kd;
-	Kd(0)= 0.78;
-	Kd(0)= 0.57;
-	Kd(0)= 0.11;
-
-	CVec3f Ks;
-	Ks(0)= 0.99;
-	Ks(1)= 0.94;
-	Ks(2)= 0.81;
-
-	int exp= 28;
-*/
-/*	//////////////////
-	// Bronze
-	CVec3f Ka;
-	Ka(0)= 0.21;
-	Ka(1)= 0.13;
-	Ka(2)= 0.05;
-
-	CVec3f Kd;
-	Kd(0)= 0.71;
-	Kd(0)= 0.43;
-	Kd(0)= 0.18;
-
-	CVec3f Ks;
-	Ks(0)= 0.39;
-	Ks(1)= 0.27;
-	Ks(2)= 0.17;
-	
-	int exp= 26;
-	//////////////////
-*/
-
-	// Beleuchtungsstaerken
-	///////////////////////
-	CVec3f Ia;		// ambient
-	Ia(0)= 0.1;
-	Ia(1)= 0.1;
-	Ia(2)= 0.1;
-	
-	CVec3f Id;		// diffuse
-	Id(0)= 1.0;
-	Id(1)= 1.0;
-	Id(2)= 1.0;
-	
-	CVec3f Is;		// specular
-	Is(0)= 1.0;
-	Is(1)= 1.0;
-	Is(2)= 1.0;
-	///////////////////////
-
-	
-	Color c;
-
-	return c;
-}
-
 void rayCast() {
-	clearTexture();
+    clearTexture();
 
-	CVec3f e,v;
+    CVec3f e,v;
+    
+    e(0)= 0;
+    e(1)= 0;
+    e(2)= A;
 	
-	e(0)= 0;
-	e(1)= 0;
-	e(2)= A;
-	
-	v(2)= -A;
+    v(2)= -A;
 
-	for (int x= 0; x < TEX_RES_X; x++) {
-		for (int y= 0; y < TEX_RES_Y; y++) {
-			v(0)= -1 + 2*x / static_cast<float>(TEX_RES_X -1);
-			v(1)= -1 + 2*y / static_cast<float>(TEX_RES_Y -1);
+    for (int x= 0; x < TEX_RES_X; x++) {
+    	for (int y= 0; y < TEX_RES_Y; y++) {
+    	    v(0)= -1 + 2*x / static_cast<float>(TEX_RES_X -1);
+	    v(1)= -1 + 2*y / static_cast<float>(TEX_RES_Y -1);
+	    	
+	    CVec3f hit= intersect(e,v);
 			
-			CVec3f hit= intersect(e,v);
+	    Color c = Color(1,1,1); // Hintergrund weiﬂ
+	    if (hit(2) != -1) {
+		c= phong(hit,v);
+	    }
 			
-			Color c = Color(1,1,1); // Hintergrund weiﬂ
-			if (hit(2) != -1) {
-				//c= phong(hit,v);
-				c = Color(1,0,0);
-			}
-			
-			setPoint(Point(x,y),c);
-		}
+	    setPoint(Point(x,y),c);
 	}
-	cout << "raycast done." << endl;
+    }
+    cout << "raycast done." << endl;
 }
 
 // Die Callback Funktion die f¸r das eigentliche Malen
@@ -356,94 +386,113 @@ void rayCast() {
 // alles andere ist wiederum ein notwendiges ‹bel!
 void display (void) {
 
-	manageTexture();
+    manageTexture();
 	
-	glClear (GL_COLOR_BUFFER_BIT);
+    glClear (GL_COLOR_BUFFER_BIT);
 	
-	mapTexture();
+    mapTexture();
 
-	glFlush ();
-	glutSwapBuffers();
+    glFlush ();
+    glutSwapBuffers();
 }
 
 void init() {
-	angleXZ= 1.5 * PI;
-	angleYZ= 0;
+    angleXZ= 1.5 * PI;
+    angleYZ= 0;
 
-	rayCast();
+    rayCast();
 }
 
 void calcL() {
-	xL= radL * sin(angleYZ) * cos(angleXZ);
-	zL= radL * sin(angleYZ) * sin(angleXZ);
-	yL= radL * cos(angleYZ);
-	//cout << "L= (" << xL << ", " << yL << ", " << zL << ")" << endl;
+    xL= radL * sin(angleYZ) * cos(angleXZ);
+    zL= radL * sin(angleYZ) * sin(angleXZ);
+    yL= radL * cos(angleYZ);
+    cout << "L= (" << xL << ", " << yL << ", " << zL << ")" << endl;
 }
 
 // nach Kugelkorrdinaten:
 // (x) PI <= XZ <= 2Pi (X)
 // (y) 0 <= YZ <= PI (Y)
 void keyboard(unsigned char c, int x, int y) {
-	switch (c) {
-
-		case 'x':	if (angleXZ > PI) {
-						angleXZ-= .1;
-						calcL();
-					}
-					break;
-
-		case 'X':	if (angleXZ < 2 * PI) {
-						angleXZ+= .1;
-						calcL();
-					}
-					break;
-
-		case 'y':	if (angleYZ > 0) {
-						angleYZ-= .1;
-						calcL();
-					}
-					break;
-
-		case 'Y':	if (angleYZ < PI) {
-						angleYZ+= .1;
-						calcL();
-					}
-					break;
-
-		/////////////////////////////////
-
-
+    switch (c) {
+        case 'q':
+        case 'Q':
+            exit(0);
+            break;
+	case 'x':
+            if (angleXZ > PI) {
+		angleXZ-= .1;
+		calcL();
+    	    }
+	    break;
+	case 'X':
+            if (angleXZ < 2 * PI) {
+		angleXZ+= .1;
+		calcL();
+	    }
+	    break;
+    	case 'y':
+            if (angleYZ > 0) {
+		angleYZ-= .1;
+		calcL();
+	    }
+	    break;
+	case 'Y':
+            if (angleYZ < PI) {
+	        angleYZ+= .1;
+		calcL();
+	    }
+	    break;
+	    /////////////////////////////////
 		/////////////////////////////////
 
 		
 		/////////////////////////////////
 
-
-		default:	cout << "Please use 'x', 'X', 'y' and 'Y' for moving the light source." << endl; 
-					break;
-	}
-	rayCast();	
-	glutPostRedisplay();
+        case 'r':
+            rK -= 0.1;
+            break;
+        case 'R':
+            rK += 0.1;
+            break;
+        case 'g':
+            gK -= 0.1;
+            break;
+        case 'G':
+            gK += 0.1;
+            break;
+        case 'b':
+            bK -= 0.1;
+            break;
+        case 'B':
+            bK += 0.1;
+            break;
+	default:
+            cout << "Please use 'x', 'X', 'y' and 'Y' for moving the light source." << endl; 
+	    break;
+    }
+    rayCast();	
+    glutPostRedisplay();
 }
 
 // Diese Funktion kennen Sie ja bereits ...
 int main (int argc, char **argv) {
 	
-	init();
+    init();
 
-	glutInit (&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB);
-	glutInitWindowSize (g_WinWidth, g_WinHeight);
+    glutInit (&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB);
+    glutInitWindowSize (g_WinWidth, g_WinHeight);
 
-	glutCreateWindow ("‹bung 7: Phong");
+    glutCreateWindow ("‹bung 7: Phong");
 	
-	glutKeyboardFunc(keyboard);
-	glutReshapeFunc (reshape);	// zust‰ndig f¸r Grˆﬂen‰nderungen des Fensters
-	glutDisplayFunc (display);	// zust‰ndig f¸r das wiederholte Neuzeichnen des Bildschirms
+    glutKeyboardFunc(keyboard);
+    glutReshapeFunc (reshape);	// zust‰ndig f¸r Grˆﬂen‰nderungen des Fensters
+    glutDisplayFunc (display);	// zust‰ndig f¸r das wiederholte Neuzeichnen des Bildschirms
 	
-	glutMainLoop ();
+    glutMainLoop ();
 
-	glDeleteTextures (1, &g_TexID); // lˆscht die oben angelegte Textur
+    glDeleteTextures (1, &g_TexID); // lˆscht die oben angelegte Textur
 
-	return 0;
+    return 0;
 }
