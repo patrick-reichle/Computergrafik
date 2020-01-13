@@ -311,7 +311,7 @@ Color phong(CVec3f HitPos, CVec3f ViewDir) {
     R = R.norm();
     float d = max(0, LightDir.dot(N));
     
-    double s = max(0,powf(H.dot(ViewDir),exp));
+    double s = max(0,powf(R.dot(N),exp));
     float r,g,b;
     
     r = Kd(0)*d + Ks(0)*s + Ka(0)*Ia(0);
@@ -419,30 +419,30 @@ void keyboard(unsigned char c, int x, int y) {
         case 'Q':
             exit(0);
             break;
-	case 'x':
+	    case 'x':
             if (angleXZ > PI) {
-		angleXZ-= .1;
-		calcL();
-    	    }
-	    break;
-	case 'X':
+	        	angleXZ-= .1;
+	        	calcL();
+       	    }
+	        break;
+    	case 'X':
             if (angleXZ < 2 * PI) {
-		angleXZ+= .1;
-		calcL();
-	    }
-	    break;
+	        	angleXZ+= .1;
+        		calcL();
+	         }
+	       break;
     	case 'y':
             if (angleYZ > 0) {
-		angleYZ-= .1;
-		calcL();
-	    }
-	    break;
-	case 'Y':
+	        	angleYZ-= 1;
+	        	calcL();
+	        }
+	        break;
+	    case 'Y':
             if (angleYZ < PI) {
-	        angleYZ+= .1;
-		calcL();
-	    }
-	    break;
+	          angleYZ+= .1;
+		      calcL();
+	        }
+	        break;
 	    /////////////////////////////////
 		/////////////////////////////////
 
@@ -450,22 +450,34 @@ void keyboard(unsigned char c, int x, int y) {
 		/////////////////////////////////
 
         case 'r':
-            rK -= 0.1;
+            if (rK > 0) rK -= 0.1;
+            cout << "red = "<< rK << endl;
             break;
         case 'R':
-            rK += 0.1;
+            if (rK < 1) rK += 0.1;
+            cout << "red = "<< rK << endl;
             break;
         case 'g':
-            gK -= 0.1;
+            if (gK > 0) gK -= 0.1;
+            cout << "green = "<< gK << endl;
             break;
         case 'G':
-            gK += 0.1;
+            if (gK < 1) gK += 0.1;
+            cout << "green = "<< gK << endl;
             break;
         case 'b':
-            bK -= 0.1;
+            if (bK > 0) bK -= 0.1;
+            cout << "blue = "<< bK << endl;
             break;
         case 'B':
-            bK += 0.1;
+            if (bK < 1) bK += 0.1;
+            cout << "blue = "<< bK << endl;
+            break;
+        case 'd':
+            if (R > 0) R--;
+            break;
+        case 'D':
+            R++;
             break;
 	default:
             cout << "Please use 'x', 'X', 'y' and 'Y' for moving the light source." << endl; 
