@@ -305,7 +305,7 @@ Color phong(CVec3f HitPos, CVec3f ViewDir) {
     LightDir = LightDir.norm();
     ViewDir = ViewDir.norm();
 
-    CVec3f R = N * (2*N.dot(LightDir)) - LightDir;
+    CVec3f R = N *2*N.dot(LightDir) - LightDir;
     CVec3f H = LightDir + ViewDir * ((LightDir+ViewDir).length());
     H = H.norm();
     R = R.norm();
@@ -313,20 +313,14 @@ Color phong(CVec3f HitPos, CVec3f ViewDir) {
     
     double s = max(0,powf(R.dot(N),exp));
     float r,g,b;
-    
-    r = Kd(0)*d + Ks(0)*s + Ka(0)*Ia(0);
-    g = Kd(1)*d + Ks(1)*s + Ka(1)*Ia(1);
-    b = Kd(2)*d + Ks(2)*s + Ka(2)*Ia(2);
+    CVec3f k = Ks+Kd;
+    r = (Kd(0)*d + Ks(0)*s) / k(0) + Ka(0)*Ia(0);
+    g = (Kd(1)*d + Ks(1)*s) / k(1) + Ka(1)*Ia(1);
+    b = (Kd(2)*d + Ks(2)*s) / k(2) + Ka(2)*Ia(2);
     r = min(r, 1);
     g = min(g,1);
     b = min(b,1);
-    Color c(r,g,b);
-    if (r > 1.0 || g > 1.0 || b > 1.0) {
-        cout << d << s <<  endl;
-        c.print();
-    }
-
-    return c;
+    return Color(r,g,b);
 }
 
 CVec3f intersect (CVec3f EyePos, CVec3f ViewDir) {
@@ -369,7 +363,7 @@ void rayCast() {
 	    	
 	    CVec3f hit= intersect(e,v);
 			
-	    Color c = Color(1,1,1); // Hintergrund weiß
+	    Color c = Color(0,0,0); // Hintergrund weiß
 	    if (hit(2) != -1) {
 		c= phong(hit,v);
 	    }
@@ -433,7 +427,7 @@ void keyboard(unsigned char c, int x, int y) {
 	       break;
     	case 'y':
             if (angleYZ > 0) {
-	        	angleYZ-= 1;
+	        	angleYZ-= .1;
 	        	calcL();
 	        }
 	        break;
